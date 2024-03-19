@@ -2,10 +2,10 @@ import sys
 
 sys.path.append("../")
 import settings
-import export_address
 import json
-import placement
-import lang_chains as LC
+from . import placement
+from . import export_address
+from . import lang_chains as LC
 from langchain.chat_models import ChatOpenAI
 from typing import Optional
 

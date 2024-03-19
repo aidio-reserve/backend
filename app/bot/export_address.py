@@ -1,24 +1,9 @@
 import settings
-import lib.areacode_list as areacode_list
-import chainlit as cl
-from langchain.chains import ConversationChain, LLMChain, SimpleSequentialChain
+from langchain.chains import LLMChain, SimpleSequentialChain
 from langchain.chat_models import ChatOpenAI
-from langchain.memory import (
-    ConversationBufferMemory,
-    RedisChatMessageHistory,
-    ConversationSummaryMemory,
-)
-from langchain.output_parsers import PydanticOutputParser
-from typing import Optional
 from langchain.prompts import PromptTemplate, FewShotPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field, validator
-from langchain.schema import HumanMessage
-from pydantic import BaseModel
-
-from geopy.geocoders import Nominatim
 
 OPENAI_API_KEY = settings.OPENAI_AK
-REDIS_URL = settings.REDIS_URL
 
 chat = ChatOpenAI(model="gpt-3.5-turbo")
 
@@ -307,6 +292,8 @@ class ExportprefectureAddress:
         return prefecture
 
 
+'''
+
 class ActivateHotelinfo:
 
     def __init__(self):
@@ -435,3 +422,5 @@ class ActivateHotelinfo:
             {"smallclasscodelist": str(cities), "old_smcode": str(old_smcode)}
         )
         return str(smallClassCode)
+
+'''

@@ -2,9 +2,7 @@ import sys
 
 sys.path.append("../")
 import settings
-import export_address
 import json
-import placement
 from langchain.chains import LLMChain, SimpleSequentialChain
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate, FewShotPromptTemplate
