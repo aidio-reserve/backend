@@ -37,7 +37,7 @@ def export_conversation_landmark(history):
         },
         {
             "input": "[('User', '出張で札幌市内に泊まることになりました。予算1泊10000円以内でビジネスホテルはありますか？ location:札幌市'), ('Concierge', '出張 で札幌市内に泊まるんですね。予算1泊10000円以内でビジネスホテルをお探しですね。札幌市内には便利な立地のビジネスホテルがいくつかあります。また、札幌市内には観光名所もたくさんありますので、お時間があれば観光もおすすめです。いつからいつまでの出張なのか、教えていただけますか？location:札幌市内')]",
-            "output": "札幌市内",
+            "output": "札幌市",
         },
     ]
     example_landmark_conversion_prompt = PromptTemplate(

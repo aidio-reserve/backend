@@ -4,26 +4,12 @@ sys.path.append("../")
 import settings
 import export_address
 import json
-import pprint
 import placement
 import lang_chains as LC
-import chainlit as cl
-from langchain.chains import ConversationChain, LLMChain, SimpleSequentialChain
 from langchain.chat_models import ChatOpenAI
-from langchain.memory import (
-    ConversationBufferMemory,
-    RedisChatMessageHistory,
-    ConversationSummaryMemory,
-)
-from langchain.output_parsers import PydanticOutputParser
 from typing import Optional
-from langchain.prompts import PromptTemplate, FewShotPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field, validator
-from langchain.schema import HumanMessage
-from pydantic import BaseModel
 
 OPENAI_API_KEY = settings.OPENAI_AK
-REDIS_URL = settings.REDIS_URL
 
 chat = ChatOpenAI(model="gpt-3.5-turbo")
 
@@ -59,41 +45,25 @@ class User_info:
         def add_message(self, speaker, message):
             self.messages.append((speaker, message))
 
+    def to_dict(self):
+        return {
+            "thread_id": self.thread_id,
+            "hotellist": vars(self.hotellist),
+            "conversation_history": {"messages": self.conversation_history.messages},
+        }
+
 
 # 必須である情報:middleClassCode,smallClassCode,checkinDate,checkoutDate \n
 # 必須でない情報:detailClassCode,adultNum,upClassNum,lowClassNum,infantWithMBNum,infantWithMNum,infantWithBNum,infantWithNoneNum,roomNum,maxCharge,minCharge\n
 
-
-@cl.on_chat_start
-async def on_chat_start():
-    thread_id = None
-    while not thread_id:  # ← スレッドIDが入力されるまで繰り返す
-        res = await cl.AskUserMessage(
-            content="私はあなたの旅行体験をサポートするコンシェルジュです。スレッドIDを入力してください。",
-            timeout=600,
-        ).send()  # ← AskUserMessageを使ってスレッドIDを入力
-        if res:
-            thread_id = res["content"]
-
-    makelist_chain = LC.MakeList()
-    make_conversation_chain = LC.MakeConversation()
-
-    userinfo = User_info(thread_id)
-
-    cl.user_session.set("makelist_chain", makelist_chain)
-    cl.user_session.set("make_conversation_chain", make_conversation_chain)
-    cl.user_session.set("userinfo", userinfo)
-    cl.user_session.set("thread_id", thread_id)
+makelist_chain = LC.MakeList()
+make_conversation_chain = LC.MakeConversation()
 
 
-@cl.on_message
-async def on_message(message: str):
-    makelist_chain = cl.user_session.get("makelist_chain")
-    make_conversation_chain = cl.user_session.get("make_conversation_chain")
-    userinfo = cl.user_session.get("userinfo")
-    thread_id = cl.user_session.get("thread_id")
+def make_message(user_message: str, userinfo: User_info):
 
-    user_landmark = export_address.ExportLandmarkChain().run(message)
+    # ユーザーのメッセージに含まれる地名を取得
+    user_landmark = export_address.ExportLandmarkChain().run(user_message)
     if user_landmark is None:
         landmarks = "無し"
     else:
@@ -103,28 +73,27 @@ async def on_message(message: str):
             )
         )
 
+    # ユーザーのメッセージを履歴に追加
     userinfo.conversation_history.add_message(
-        "User", message + " location:" + str(user_landmark)
+        "User", user_message + " location:" + str(user_landmark)
     )
 
+    # 会話履歴よりホテルリストを更新
     new_hotel_list = makelist_chain.run(
         content=str(userinfo.conversation_history.messages),
         hotelinfo=str(userinfo.hotellist),
     )
-
     new_hotel_list = json.loads(new_hotel_list)
     userinfo.hotellist = new_hotel_list
 
-    print(userinfo.hotellist)
-
-    print(user_landmark)
-
+    # AIコンシェルジュによる応答を生成
     concierge_response = make_conversation_chain.run(
-        recent_message=message,
+        recent_message=user_message,
         conversation_history=str(userinfo.conversation_history),
         hotelinfo=str(userinfo.hotellist),
     )
 
+    # AIコンシェルジュの応答に含まれる地名を取得
     concierge_landmark = export_address.ExportLandmarkChain().run(
         str(concierge_response)
     )
@@ -137,19 +106,21 @@ async def on_message(message: str):
             )
         )
 
+    # AIコンシェルジュの応答を履歴に追加
     userinfo.conversation_history.add_message(
         "Concierge",
         concierge_response + "location:" + str(concierge_landmark),
     )
 
+    # 会話履歴よりホテルリストを更新
     new_hotel_list = makelist_chain.run(
         content=str(userinfo.conversation_history.messages),
         hotelinfo=str(userinfo.hotellist),
     )
-
     new_hotel_list = json.loads(new_hotel_list)
     userinfo.hotellist = new_hotel_list
 
+    # 会話履歴より、現在の話題に関連する地名を取得
     landmarks = placement.export_conversation_landmark(
         str(userinfo.conversation_history.messages)
     )
@@ -164,15 +135,12 @@ async def on_message(message: str):
                 landmarks
             )
         )
+        # ランドマークの緯度経度を取得し、ホテルリストに追加
         place = placement.export_letitude_longitude(landmarks)
         userinfo.hotellist["latitude"] = place[0]
         userinfo.hotellist["longitude"] = place[1]
 
-    res = str((userinfo.conversation_history.messages)) + "\n" + str(userinfo.hotellist)
-
-    cl.user_session.set("userinfo", userinfo)
-
-    await cl.Message(res).send()
+    return concierge_response, userinfo
 
 
 #  "hotelinfo": str(hotel_list.__dict__)
