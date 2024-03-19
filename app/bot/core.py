@@ -1,6 +1,8 @@
 import sys
+import os
 
-sys.path.append("../")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 import settings
 import json
 from . import placement
@@ -9,7 +11,7 @@ from . import lang_chains as LC
 from langchain.chat_models import ChatOpenAI
 from typing import Optional
 
-OPENAI_API_KEY = settings.OPENAI_AK
+OPENAI_API_KEY = settings.OPENAI_API_KEY
 
 chat = ChatOpenAI(model="gpt-3.5-turbo")
 

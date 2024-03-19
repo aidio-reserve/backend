@@ -1,9 +1,14 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 import settings
 from langchain.chains import LLMChain, SimpleSequentialChain
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 
-OPENAI_API_KEY = settings.OPENAI_AK
+OPENAI_API_KEY = settings.OPENAI_API_KEY
 
 chat = ChatOpenAI(model="gpt-3.5-turbo")
 
