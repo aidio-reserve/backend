@@ -53,4 +53,4 @@ def export_userinfo():
     userinfo = user_sessions.get(thread_id)
     if not userinfo:
         return jsonify({"error": "Session not found"}), 404
-    return jsonify(userinfo.to_dict())
+    return jsonify(userinfo)

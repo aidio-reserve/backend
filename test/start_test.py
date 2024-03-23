@@ -4,7 +4,7 @@ import requests
 url = "http://localhost:5001/start"
 
 # 送信するデータ
-data = {"thread_id": "11111"}
+data = {"thread_id": "12233445"}
 
 # POSTリクエストを送信
 response = requests.post(url, json=data)
