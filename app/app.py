@@ -24,7 +24,7 @@ def chatbot_response(thread_id, user_message):
 
     user_sessions[thread_id] = userinfo
 
-    return jsonify({"response": response_message, "userinfo": userinfo.to_dict()})
+    return jsonify({"response": response_message})
 
 
 # Flaskのルート設定
