@@ -1,10 +1,5 @@
-import sys
-
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-
-import settings
+from .. import settings
+import app.settings as settings
 from geopy.geocoders import Nominatim
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI

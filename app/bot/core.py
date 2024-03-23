@@ -1,9 +1,4 @@
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-
-import settings
+from .. import settings
 import json
 from . import placement
 from . import export_address
@@ -77,7 +72,7 @@ def make_message(user_message: str, userinfo: User_info):
 
     # ユーザーのメッセージを履歴に追加
     userinfo.conversation_history.add_message(
-        "User", user_message + " location:" + str(user_landmark)
+        "User:", user_message + " location:" + str(user_landmark)
     )
 
     # 会話履歴よりホテルリストを更新
@@ -110,7 +105,7 @@ def make_message(user_message: str, userinfo: User_info):
 
     # AIコンシェルジュの応答を履歴に追加
     userinfo.conversation_history.add_message(
-        "Concierge",
+        "Concierge:",
         concierge_response + "location:" + str(concierge_landmark),
     )
 
