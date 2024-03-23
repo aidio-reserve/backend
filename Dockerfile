@@ -1,6 +1,6 @@
 FROM python:3.12.1
 
-WORKDIR /app
+WORKDIR /usr/src/app
 ENV FLASK_APP=app
 
 COPY /app/requirements.txt ./
