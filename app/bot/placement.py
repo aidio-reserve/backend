@@ -1,5 +1,4 @@
-from .. import settings
-import app.settings as settings
+from app import settings
 from geopy.geocoders import Nominatim
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -54,10 +53,11 @@ def export_conversation_landmark(history):
     return make_landmark_chain.run(history=history)
 
 
-def export_letitude_longitude(landmark):
+def export_letitude_longitude(landmark: str):
     if landmark is None:
         return None
     geolocator = Nominatim(user_agent="test")
     location = geolocator.geocode(str(landmark))
-
+    if location is None:
+        return None
     return location.latitude, location.longitude

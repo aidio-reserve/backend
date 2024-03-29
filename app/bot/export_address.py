@@ -1,4 +1,4 @@
-from .. import settings
+from app import settings
 from langchain.chains import LLMChain, SimpleSequentialChain
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate, FewShotPromptTemplate

@@ -1,4 +1,4 @@
-from .. import settings
+from app import settings
 import json
 from langchain.chains import LLMChain, SimpleSequentialChain
 from langchain.chat_models import ChatOpenAI
@@ -28,8 +28,8 @@ class MakeList:
         {content}
         \n
         ホテルの条件リストJSON各種パラメータの説明:
-        latitude: 変更しない
-        longitude: 変更しない
+        latitude: 小数点型が既に存在する場合変更しない
+        longitude: 小数点型が既に存在する場合変更しない
         checkinDate: (チェックインする日付(YYYY-MM-DD)、(例:2024-10-01, None))
         checkoutDate: (チェックアウトする日付(YYYY-MM-DD)、(例:2024-10-02, None))
         detailClassCode: (駅や詳細地域などの細かい区分、(例:biwako, tokyoeki, rakutenchi, None))
