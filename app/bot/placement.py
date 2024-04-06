@@ -58,7 +58,7 @@ def export_letitude_longitude(landmark):
     if landmark is None:
         return None
     geolocator = Nominatim(user_agent="test")
-    location = geolocator.geocode(str(landmark))
+    location = geolocator.geocode(str(landmark), timeout=10)
 
     if location is not None:
         return location.latitude, location.longitude
