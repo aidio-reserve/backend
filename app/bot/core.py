@@ -134,8 +134,11 @@ def make_message(user_message: str, userinfo: User_info):
         )
         # ランドマークの緯度経度を取得し、ホテルリストに追加
         place = placement.export_letitude_longitude(landmarks)
-        userinfo.hotellist["latitude"] = place[0]
-        userinfo.hotellist["longitude"] = place[1]
+        if place is not None and len(place) >= 2:
+            userinfo.hotellist["latitude"] = place[0]
+            userinfo.hotellist["longitude"] = place[1]
+        else:
+            print("place が無効: ", place)
 
     return concierge_response, userinfo
 

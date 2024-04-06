@@ -60,4 +60,9 @@ def export_letitude_longitude(landmark):
     geolocator = Nominatim(user_agent="test")
     location = geolocator.geocode(str(landmark))
 
-    return location.latitude, location.longitude
+    if location is not None:
+        return location.latitude, location.longitude
+    else:
+        # locationがNoneの場合の処理。例えばNoneを返す、エラーメッセージをログに記録する、
+        # またはデフォルトの緯度経度を返すなど。
+        return None
