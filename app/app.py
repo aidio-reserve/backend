@@ -91,4 +91,4 @@ def chat():
 def userinfo():
     thread_id = request.json.get("thread_id")
     user_info = export_userinfo(thread_id)
-    return jsonify(user_info.to_dict())
+    return jsonify(user_info)
