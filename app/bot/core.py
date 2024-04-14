@@ -35,6 +35,25 @@ class User_info:
             self.maxCharge = None
             self.minCharge = None
 
+        def to_dict(self):
+            return {
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+                "checkinDate": self.checkinDate,
+                "checkoutDate": self.checkoutDate,
+                "detailClassCode": self.detailClassCode,
+                "adultNum": self.adultNum,
+                "upClassNum": self.upClassNum,
+                "lowClassNum": self.lowClassNum,
+                "infantWithMBNum": self.infantWithMBNum,
+                "infantWithMNum": self.infantWithMNum,
+                "infantWithBNum": self.infantWithBNum,
+                "infantWithNoneNum": self.infantWithNoneNum,
+                "roomNum": self.roomNum,
+                "maxCharge": self.maxCharge,
+                "minCharge": self.minCharge
+            }
+
     class ConversationHistory:
         def __init__(self):
             self.messages = []
@@ -45,7 +64,7 @@ class User_info:
     def to_dict(self):
         return {
             "thread_id": self.thread_id,
-            "hotellist": vars(self.hotellist),
+            "hotellist": self.hotellist if isinstance(self.hotellist, dict) else self.hotellist.to_dict(),
             "conversation_history": {"messages": self.conversation_history.messages},
         }
 
