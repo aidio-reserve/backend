@@ -35,6 +35,25 @@ class User_info:
             self.maxCharge = None
             self.minCharge = None
 
+        def to_dict(self):
+            return {
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+                "checkinDate": self.checkinDate,
+                "checkoutDate": self.checkoutDate,
+                "detailClassCode": self.detailClassCode,
+                "adultNum": self.adultNum,
+                "upClassNum": self.upClassNum,
+                "lowClassNum": self.lowClassNum,
+                "infantWithMBNum": self.infantWithMBNum,
+                "infantWithMNum": self.infantWithMNum,
+                "infantWithBNum": self.infantWithBNum,
+                "infantWithNoneNum": self.infantWithNoneNum,
+                "roomNum": self.roomNum,
+                "maxCharge": self.maxCharge,
+                "minCharge": self.minCharge
+            }
+
     class ConversationHistory:
         def __init__(self):
             self.messages = []
@@ -45,7 +64,7 @@ class User_info:
     def to_dictionary(self):
         return {
             "thread_id": self.thread_id,
-            "hotellist": self.hotellist.__dict__,
+            "hotellist": self.hotellist if isinstance(self.hotellist, dict) else self.hotellist.to_dict(),
             "conversation_history": {"messages": self.conversation_history.messages},
         }
 
@@ -156,8 +175,7 @@ def make_message(user_message: str, userinfo: User_info):
         print(landmarks)
         # ランドマークの緯度経度を取得し、ホテルリストに追加
         place = placement.export_letitude_longitude(landmarks)
-        if place is not None:
-            userinfo.hotellist.latitude = place[0]
-            userinfo.hotellist.longitude = place[1]
+        userinfo.hotellist["latitude"] = place[0]
+        userinfo.hotellist["longitude"] = place[1]
 
     return concierge_response, userinfo
