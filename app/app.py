@@ -90,4 +90,5 @@ def chat():
 @app.route("/export_userinfo", methods=["POST"])
 def userinfo():
     thread_id = request.json.get("thread_id")
-    return export_userinfo(thread_id)
+    return jsonify(userinfo.to_dict())
+
