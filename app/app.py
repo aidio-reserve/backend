@@ -90,7 +90,4 @@ def chat():
 @app.route("/export_userinfo", methods=["POST"])
 def userinfo():
     thread_id = request.json.get("thread_id")
-    userinfo = user_sessions.get(thread_id)
-    if not userinfo:
-        return jsonify({"error": "Session not found"}), 404
-    return jsonify(userinfo.to_dict())
+    return export_userinfo(thread_id)
