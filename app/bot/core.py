@@ -1,4 +1,4 @@
-from .. import settings
+from app import settings
 import json
 from . import placement
 from . import export_address
@@ -61,7 +61,7 @@ class User_info:
         def add_message(self, speaker, message):
             self.messages.append((speaker, message))
 
-    def to_dict(self):
+    def to_dictionary(self):
         return {
             "thread_id": self.thread_id,
             "hotellist": self.hotellist if isinstance(self.hotellist, dict) else self.hotellist.to_dict(),
@@ -74,6 +74,26 @@ class User_info:
 
 makelist_chain = LC.MakeList()
 make_conversation_chain = LC.MakeConversation()
+
+
+def convert_to_hotellist(json_string):
+    # JSON文字列を辞書にデシリアライズ
+    data_dict = json.loads(json_string)
+
+    # Hotellistクラスのインスタンスを生成
+    hotellist_instance = User_info.Hotellist()
+
+    # 辞書のキーと値を使用してHotellistインスタンスの属性を更新
+    for key, value in data_dict.items():
+        if hasattr(hotellist_instance, key):
+            setattr(hotellist_instance, key, value)
+
+    return hotellist_instance
+
+
+def delete_space(data_string):
+    table = str.maketrans({"\u3000": "", " ": "", "\t": "", "\n": "", "\r": ""})
+    return data_string.translate(table)
 
 
 def make_message(user_message: str, userinfo: User_info):
@@ -99,7 +119,9 @@ def make_message(user_message: str, userinfo: User_info):
         content=str(userinfo.conversation_history.messages),
         hotelinfo=str(userinfo.hotellist),
     )
-    new_hotel_list = json.loads(new_hotel_list)
+    new_hotel_list = delete_space(new_hotel_list)
+    print(new_hotel_list)
+    new_hotel_list = convert_to_hotellist(str(new_hotel_list))
     userinfo.hotellist = new_hotel_list
 
     # AIコンシェルジュによる応答を生成
@@ -133,7 +155,8 @@ def make_message(user_message: str, userinfo: User_info):
         content=str(userinfo.conversation_history.messages),
         hotelinfo=str(userinfo.hotellist),
     )
-    new_hotel_list = json.loads(new_hotel_list)
+    new_hotel_list = delete_space(new_hotel_list)
+    new_hotel_list = convert_to_hotellist(str(new_hotel_list))
     userinfo.hotellist = new_hotel_list
 
     # 会話履歴より、現在の話題に関連する地名を取得
@@ -141,9 +164,7 @@ def make_message(user_message: str, userinfo: User_info):
         str(userinfo.conversation_history.messages)
     )
 
-    print(landmarks)
-
-    if landmarks is None:
+    if landmarks is None or landmarks == "None":
         landmarks = "無し"
     else:
         landmarks += " " + str(
@@ -151,15 +172,10 @@ def make_message(user_message: str, userinfo: User_info):
                 landmarks
             )
         )
+        print(landmarks)
         # ランドマークの緯度経度を取得し、ホテルリストに追加
         place = placement.export_letitude_longitude(landmarks)
-        if place is not None and len(place) >= 2:
-            userinfo.hotellist["latitude"] = place[0]
-            userinfo.hotellist["longitude"] = place[1]
-        else:
-            print("place が無効: ", place)
+        userinfo.hotellist["latitude"] = place[0]
+        userinfo.hotellist["longitude"] = place[1]
 
     return concierge_response, userinfo
-
-
-#  "hotelinfo": str(hotel_list.__dict__)

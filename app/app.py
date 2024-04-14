@@ -1,30 +1,63 @@
 from flask import Flask, request, jsonify, Blueprint
 from .bot import core
+import json
+from pathlib import Path
 
 app = Flask(__name__)
 
-user_sessions = {}
+
+def decode_json_to_userinfo(file_name):
+    with open(file_name, "r") as file:
+        data = json.load(file)
+
+    user_info = core.User_info(data["thread_id"])
+
+    # Hotellistデータの復元
+    for key, value in data["hotellist"].items():
+        setattr(user_info.hotellist, key, value)
+
+    # ConversationHistoryデータの復元
+    for message in data["conversation_history"]["messages"]:
+        user_info.conversation_history.add_message(*message)
+
+    return user_info
 
 
-def on_chat_start(thread_id):
-    userinfo = core.User_info(thread_id)
-    user_sessions[thread_id] = userinfo
-    return jsonify(userinfo.to_dict())
+def json_make(user_info):
+    data = user_info.to_dictionary()
+    file_name = f"{data['thread_id']}.json"
+    with open(file_name, "w") as file:
+        json.dump(data, file, indent=4)
+
+
+def chat_start(thread_id: str):
+    user_info = core.User_info(thread_id)
+    json_make(user_info)
 
 
 def chatbot_response(thread_id, user_message):
-    userinfo = user_sessions.get(thread_id)
-    if not userinfo:
-        return jsonify({"error": "Session not found"}), 404
+
+    user_info = decode_json_to_userinfo(str(thread_id) + ".json")
+    print(user_info)
 
     # ここでユーザーのメッセージを処理し、userinfoを更新
-    c = core.make_message(user_message, userinfo)
+    c = core.make_message(user_message, user_info)
     response_message = c[0]
-    userinfo = c[1]
+    user_info = c[1]
+    print(user_info)
 
-    user_sessions[thread_id] = userinfo
+    # 更新したuserinfoをファイルに保存
+    json_make(user_info)
 
-    return jsonify({"response": response_message})
+    return {"response": response_message}
+
+
+def export_userinfo(thread_id):
+    f = open(str(thread_id) + ".json", "r")
+    user_info = json.load(f)
+    f.close()
+    print(user_info)
+    return jsonify(user_info)
 
 
 # Flaskのルート設定
@@ -33,12 +66,18 @@ def index():
     return "index page"
 
 
+# スレッドIDを受け取り、新しいセッションを作成する {"thread_id": "任意"}
 @app.route("/start", methods=["POST"])
 def start():
     thread_id = request.json.get("thread_id")
-    return on_chat_start(thread_id)
+    chat_start(thread_id)
+    f = open(str(thread_id) + ".json", "r")
+    userinfo = json.load(f)
+    f.close()
+    return jsonify(userinfo)
 
 
+# ユーザーのメッセージを受け取り、応答を返す {"thread_id": "任意", "message": "任意"}
 @app.route("/chatting", methods=["POST"])
 def chat():
     data = request.json
@@ -47,8 +86,9 @@ def chat():
     return chatbot_response(thread_id, user_message)
 
 
+# スレッドIDを受け取り、ホテル情報を返す {"thread_id": "任意"}
 @app.route("/export_userinfo", methods=["POST"])
-def export_userinfo():
+def userinfo():
     thread_id = request.json.get("thread_id")
     userinfo = user_sessions.get(thread_id)
     if not userinfo:
