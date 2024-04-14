@@ -4,7 +4,7 @@ import requests
 url = "http://localhost:5001/chatting"
 
 # 送信するデータ
-data = {"thread_id": "12233445", "message": "こんにちは！温泉旅行に行きたいです！"}
+data = {"thread_id": "12233445", "message": "箱根旅行に行きたいな"}
 
 # POSTリクエストを送信
 response = requests.post(url, json=data)
