@@ -72,9 +72,9 @@ def start():
     thread_id = request.json.get("thread_id")
     chat_start(thread_id)
     f = open(str(thread_id) + ".json", "r")
-    userinfo = json.load(f)
+    user_info = json.load(f)
     f.close()
-    return jsonify(userinfo)
+    return jsonify(user_info)
 
 
 # ユーザーのメッセージを受け取り、応答を返す {"thread_id": "任意", "message": "任意"}
@@ -90,5 +90,4 @@ def chat():
 @app.route("/export_userinfo", methods=["POST"])
 def userinfo():
     thread_id = request.json.get("thread_id")
-    user_info = export_userinfo(thread_id)
-    return jsonify(user_info)
+    return export_userinfo(thread_id)
