@@ -51,7 +51,7 @@ class User_info:
                 "infantWithNoneNum": self.infantWithNoneNum,
                 "roomNum": self.roomNum,
                 "maxCharge": self.maxCharge,
-                "minCharge": self.minCharge
+                "minCharge": self.minCharge,
             }
 
     class ConversationHistory:
@@ -64,7 +64,11 @@ class User_info:
     def to_dictionary(self):
         return {
             "thread_id": self.thread_id,
-            "hotellist": self.hotellist if isinstance(self.hotellist, dict) else self.hotellist.to_dict(),
+            "hotellist": (
+                self.hotellist
+                if isinstance(self.hotellist, dict)
+                else self.hotellist.to_dict()
+            ),
             "conversation_history": {"messages": self.conversation_history.messages},
         }
 
@@ -175,7 +179,8 @@ def make_message(user_message: str, userinfo: User_info):
         print(landmarks)
         # ランドマークの緯度経度を取得し、ホテルリストに追加
         place = placement.export_letitude_longitude(landmarks)
-        userinfo.hotellist["latitude"] = place[0]
-        userinfo.hotellist["longitude"] = place[1]
+        if place is not None:
+            userinfo.hotellist["latitude"] = place[0]
+            userinfo.hotellist["longitude"] = place[1]
 
     return concierge_response, userinfo
