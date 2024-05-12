@@ -1,9 +1,11 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from .bot import core
 import json
 from pathlib import Path
 
 app = Flask(__name__)
+CORS(app)
 
 
 def decode_json_to_userinfo(file_name):
