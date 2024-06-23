@@ -51,7 +51,13 @@ def chatbot_response(thread_id, user_message):
     # 更新したuserinfoをファイルに保存
     json_make(user_info)
 
-    return {"response": response_message}
+    display_hotel = core.display_hotel(user_message)
+
+    res = {}
+    res["response"] = response_message
+    res["display-hotel"] = display_hotel
+
+    return jsonify(res)
 
 
 def export_userinfo(thread_id):

@@ -184,3 +184,8 @@ def make_message(user_message: str, userinfo: User_info):
             userinfo.hotellist.longitude = place[1]
 
     return concierge_response, userinfo
+
+
+def display_hotel(message: str):
+    res = 0
+    return res
