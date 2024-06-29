@@ -385,3 +385,26 @@ class ExportprefectureAddress:
         )
         prefecture = getaddress_chain.run(message)
         return prefecture
+
+
+class DisplayHotel:
+    display_prompt = PromptTemplate(
+        input_variables=["recent_message"],
+        template="""
+        あなたへの指示:
+        Userの発言の中に「ホテルを表示してほしい」旨の文章がある場合、'1'を出力しなさい。それ以外の場合、'0'を出力しなさい。
+        ## 注意
+        \n
+        最新のUserの発言: {recent_message}
+        """,
+    )
+
+    display_chat = ChatOpenAI(model="gpt-3.5-turbo")
+
+    def __init__(self):
+        self.make_conversation_chain = LLMChain(
+            llm=self.display_chat, prompt=self.display_prompt
+        )
+
+    def run(self, recent_message):
+        return self.make_conversation_chain.run(recent_message=recent_message)
