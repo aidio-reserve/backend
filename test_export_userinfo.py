@@ -1,10 +1,10 @@
 import requests
 
 # Flaskアプリケーションが動いているURL
-url = "http://localhost:5001/export_userinfo"
+url = "http://localhost:5000/export_userinfo"
 
 # 送信するデータ
-data = {"thread_id": "12233445"}
+data = {"thread_id": "114514"}
 
 # POSTリクエストを送信
 response = requests.post(url, json=data)

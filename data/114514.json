@@ -1,0 +1,22 @@
+{
+    "thread_id": "114514",
+    "hotellist": {
+        "latitude": 35.68183347805237,
+        "longitude": 139.76802085456532,
+        "checkinDate": "2024-06-24",
+        "checkoutDate": "2024-06-26",
+        "adultNum": 2,
+        "upClassNum": 0,
+        "lowClassNum": 0,
+        "infantWithMBNum": 0,
+        "infantWithMNum": 0,
+        "infantWithBNum": 0,
+        "infantWithNoneNum": 0,
+        "roomNum": 1,
+        "maxCharge": 50000,
+        "minCharge": 1000
+    },
+    "conversation_history": {
+        "messages": []
+    }
+}

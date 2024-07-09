@@ -1,17 +1,8 @@
-# バックエンドシステム
+# Langchain_test
 
-## 概要
+Langchain の最新バージョンを試す
 
-Flask を使用して API サーバを構築
+## メモ
 
-## アクセス方法
-
-- 会話の開始  
-  `http://localhost:5000/start`  
-  パラメータ: thread_id(スレッド ID)
-- 会話の継続  
-  `http://localhost:5000/chatting`  
-  パラメータ: thread_id(スレッド ID), message(ユーザのメッセージ)
-- ユーザー情報取得  
-  `http://localhost:5000/export_userinfo`  
-  パラメータ: thread_id(スレッド ID)
+- ChatModels: 会話向き
+- LLMs: 文章補完、OpenAI は JSON 補完に優れる
