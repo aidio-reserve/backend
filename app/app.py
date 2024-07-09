@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 
 app = Flask(__name__)
-CORS(app)
 
 
 def decode_json_to_userinfo(file_name):
