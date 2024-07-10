@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 
 app = Flask(__name__)
-CORS(app)
 
 
 def decode_json_to_userinfo(file_name):
@@ -56,7 +55,7 @@ def chatbot_response(thread_id, user_message):
     res = {}
     res["response"] = response_message
     res["display-hotel"] = display_hotel
-
+    res["hotel_info"] = user_info.hotellist.to_dict()
     return jsonify(res)
 
 
