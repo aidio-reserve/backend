@@ -54,7 +54,7 @@ def chatbot_response(thread_id, user_message):
 
     res = {}
     res["response"] = response_message
-    res["display-hotel"] = display_hotel
+    res["display_hotel"] = display_hotel
     res["hotel_info"] = user_info.hotellist.to_dict()
     return jsonify(res)
 
