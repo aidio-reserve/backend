@@ -8,7 +8,7 @@ from typing import Optional
 
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 
-chat = ChatOpenAI(model="gpt-3.5-turbo")
+chat = ChatOpenAI(model="gpt-4o-mini")
 
 
 class User_info:

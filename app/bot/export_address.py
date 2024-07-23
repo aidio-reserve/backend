@@ -5,12 +5,12 @@ from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 
-chat = ChatOpenAI(model="gpt-3.5-turbo")
+chat = ChatOpenAI(model="gpt-4o-mini")
 
 
 class ExportLandmarkChain:
 
-    chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
+    chat = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
 
     def __init__(self):
         llm = self.chat
@@ -112,7 +112,7 @@ class ExportprefectureAddress:
 
     class GetAddressChain:
 
-        chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5)
+        chat = ChatOpenAI(model="gpt-4o-mini", temperature=0.5)
 
         def __init__(self):
             llm = self.chat
@@ -196,7 +196,7 @@ class ExportprefectureAddress:
 
     class GetAddressPrefectureChain:
 
-        chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5)
+        chat = ChatOpenAI(model="gpt-4o-mini", temperature=0.5)
 
         def __init__(self):
             llm = self.chat
@@ -336,7 +336,7 @@ class ActivateHotelinfo:
         return self.hotellist
 
     def activate_smallclasscode(self, hotelinfo):
-        chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5)
+        chat = ChatOpenAI(model="gpt-4o-mini", temperature=0.5)
         prefecture = hotelinfo["middleClassCode"]
         old_smcode = hotelinfo["smallClassCode"]
         cities = areacode_list.get_smallClassCodes(prefecture)
