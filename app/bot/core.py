@@ -3,6 +3,7 @@ import json
 from . import placement
 from . import export_address
 from . import lang_chains as LC
+from . import searchPref
 from langchain.chat_models import ChatOpenAI
 from typing import Optional
 
@@ -36,22 +37,29 @@ class User_info:
             self.minCharge = None
 
         def to_dict(self):
+            pref, city = searchPref.get_prefecture_name_from_lat_lon(self.latitude, self.longitude)
             return {
-                "latitude": self.latitude,
-                "longitude": self.longitude,
-                "checkinDate": self.checkinDate,
-                "checkoutDate": self.checkoutDate,
-                "detailClassCode": self.detailClassCode,
-                "adultNum": self.adultNum,
-                "upClassNum": self.upClassNum,
-                "lowClassNum": self.lowClassNum,
-                "infantWithMBNum": self.infantWithMBNum,
-                "infantWithMNum": self.infantWithMNum,
-                "infantWithBNum": self.infantWithBNum,
-                "infantWithNoneNum": self.infantWithNoneNum,
-                "roomNum": self.roomNum,
-                "maxCharge": self.maxCharge,
-                "minCharge": self.minCharge,
+                "hotel_location": pref + city,
+                "check_in_date": self.checkinDate,
+                "check_out_date": self.checkoutDate,
+                "number_of_people": self.adultNum+ self.upClassNum+ self.lowClassNum+ self.infantWithMBNum+ self.infantWithMNum+ self.infantWithBNum+ self.infantWithNoneNum,
+                "price":str(self.minCharge) + " ~ " + str(self.maxCharge),
+                "size_of_room": None,
+                # "latitude": self.latitude,
+                # "longitude": self.longitude,
+                # "checkinDate": self.checkinDate,
+                # "checkoutDate": self.checkoutDate,
+                # "detailClassCode": self.detailClassCode,
+                # "adultNum": self.adultNum,
+                # "upClassNum": self.upClassNum,
+                # "lowClassNum": self.lowClassNum,
+                # "infantWithMBNum": self.infantWithMBNum,
+                # "infantWithMNum": self.infantWithMNum,
+                # "infantWithBNum": self.infantWithBNum,
+                # "infantWithNoneNum": self.infantWithNoneNum,
+                # "roomNum": self.roomNum,
+                # "maxCharge": self.maxCharge,
+                # "minCharge": self.minCharge,
             }
 
     class ConversationHistory:
