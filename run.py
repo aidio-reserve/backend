@@ -1,4 +1,4 @@
-from app import app
+from app.app import app  # 修正: from app import app -> from app.app import app
 import logging
 
 if __name__ == "__main__":
