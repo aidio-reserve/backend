@@ -187,5 +187,5 @@ def make_message(user_message: str, userinfo: User_info):
 
 
 def display_hotel(message: str):
-    res = 0
+    res = 1
     return res
