@@ -6,3 +6,5 @@ Flask-Cors==4.0.1
 requests==2.31.0
 python-dotenv==1.0.0
 pycountry==24.6.1
+nominatim==0.1
+geolocator==0.1.1

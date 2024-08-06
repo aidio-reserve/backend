@@ -18,6 +18,7 @@ def get_location_info_from_lat_lon(latitude, longitude, geolocator):
         print(f"Error: {e}")
     return None, None
 
+
 # 都道府県コードから都道府県名を取得
 def get_subdivision_name(iso_code):
     subdivision = pycountry.subdivisions.get(code=iso_code)
@@ -25,8 +26,11 @@ def get_subdivision_name(iso_code):
         return subdivision.name
     return None
 
+
 def get_prefecture_name_from_lat_lon(latitude, longitude, geolocator):
-    prefecture_code, city= get_location_info_from_lat_lon(latitude, longitude, geolocator)
+    prefecture_code, city = get_location_info_from_lat_lon(
+        latitude, longitude, geolocator
+    )
     if prefecture_code:
         return get_subdivision_name(prefecture_code), city
     return None
