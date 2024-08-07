@@ -28,7 +28,8 @@ def get_subdivision_name(iso_code):
     return None
 
 
-def get_prefecture_name_from_lat_lon(latitude, longitude, geolocator):
+def get_prefecture_name_from_lat_lon(latitude, longitude):
+    geolocator = Nominatim(user_agent="aidio_app")
     prefecture_code, city = get_location_info_from_lat_lon(
         latitude, longitude, geolocator
     )
