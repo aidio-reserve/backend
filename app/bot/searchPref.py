@@ -7,6 +7,7 @@ geolocator = Nominatim(user_agent="aidio_app")
 
 # 緯度経度から住所情報を取得
 def get_location_info_from_lat_lon(latitude, longitude, geolocator):
+    geolocator = Nominatim(user_agent="aidio_app")
     try:
         location = geolocator.reverse((latitude, longitude), language="ja")
         if location and location.raw.get("address"):
