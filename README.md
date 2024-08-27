@@ -12,6 +12,8 @@ aidio プロジェクトのバックエンドです。
 
 ## エンドポイント
 
+例: `http://localhost:8000/chatting`
+
 ### `/start` (POST)
 
 ユーザー情報の初期化
