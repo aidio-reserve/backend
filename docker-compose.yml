@@ -1,0 +1,9 @@
+services:
+  app:
+    restart: always
+    build: .
+    container_name: "aidio"
+    working_dir: "/"
+    tty: true
+    ports:
+      - "8000:5000"
