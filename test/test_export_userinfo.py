@@ -1,4 +1,6 @@
 import requests
+import pprint
+import json
 
 # Flaskアプリケーションが動いているURL
 url = "http://localhost:8000/export_userinfo"
@@ -10,4 +12,5 @@ data = {"thread_id": "20021114"}
 response = requests.post(url, json=data)
 
 # レスポンスを表示
-print(response.text)
+res_json = json.loads(response.text)
+pprint.pprint(res_json)

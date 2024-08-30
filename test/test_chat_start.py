@@ -10,4 +10,5 @@ data = {"thread_id": "20021114"}
 response = requests.post(url, json=data)
 
 # レスポンスを表示
+print(type(response.text))
 print(response.text)
