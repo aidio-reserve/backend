@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from schemas import UserInfo, HotelConditions
-from services import process_message
+from services import process_message, process_display_hotel
 from models import (
     save_store,
     save_config,
@@ -100,11 +100,12 @@ def chat():
         return jsonify({"error": "Session not found, please initialize first"}), 404
 
     ai_response = process_message(thread_id, user_message)
+    display_hotel_bool = process_display_hotel(thread_id)
     user_info = load_user_info(thread_id)
 
     res = {
         "response": ai_response,
-        "display_hotel": 1,
+        "display_hotel": display_hotel_bool,
         "hotel_option": user_info.get_hotel_options(),
     }
 

@@ -9,7 +9,7 @@ url = "http://localhost:8000/chatting"
 # 送信するデータ
 data = {
     "thread_id": "20021114",
-    "message": "北海道に行きたい",
+    "message": "明後日から二泊三日で",
 }
 
 # POSTリクエストを送信

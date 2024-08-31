@@ -151,18 +151,15 @@ class UserInfo(BaseModel):
         check_in_date = self.hotel_conditions.checkinDate or None
         check_out_date = self.hotel_conditions.checkoutDate or None
         number_of_people = self.hotel_conditions.adultnNum or None
-        price = (
-            f"{self.hotel_conditions.minCharge} ~ {self.hotel_conditions.maxCharge}"
-            if self.hotel_conditions.minCharge is not None
-            and self.hotel_conditions.maxCharge is not None
-            else None
-        )
+        min_charge = self.hotel_conditions.minCharge or None
+        max_charge = self.hotel_conditions.maxCharge or None
         return {
             "hotel_location": hotel_location,
             "checkinDate": check_in_date,
             "checkoutDate": check_out_date,
             "number_of_people": number_of_people,
-            "price": price,
+            "minCharge": min_charge,
+            "maxCharge": max_charge,
         }
 
     def get_thread_info(self) -> dict:
@@ -195,6 +192,23 @@ class UserInfo(BaseModel):
                 "longitude": self.longitude,
             },
         }
+
+    def check_indispensable_values_present(self) -> bool:
+        """
+        latitude、longitude、checkinDate、checkoutDateのいずれかがNoneであればFalseを返し、
+        そうでなければTrueを返す。
+
+        Returns:
+            bool: すべての値が存在すればTrue、いずれかがNoneであればFalse。
+        """
+        return all(
+            [
+                self.latitude is not None,
+                self.longitude is not None,
+                self.hotel_conditions.checkinDate is not None,
+                self.hotel_conditions.checkoutDate is not None,
+            ]
+        )
 
 
 def validate_hotel_info(user_info: UserInfo) -> str:

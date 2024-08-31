@@ -16,6 +16,7 @@ from langchain_core.chat_history import (
     BaseChatMessageHistory,
     InMemoryChatMessageHistory,
 )
+from langchain.output_parsers import BooleanOutputParser
 
 model_openai = ChatOpenAI(model="gpt-4o-mini")
 
@@ -168,3 +169,59 @@ def extract_hotel_info(conversation_text: str) -> HotelConditions:
         schema=HotelConditions
     )
     return runnable.invoke({"text": conversation_text})
+
+
+def create_display_hotellist_prompt() -> ChatPromptTemplate:
+    """
+    ホテルリスト表示のプロンプトテンプレートを作成する。
+
+    この関数は、テキストの内容に基づいて質問者がホテルリストを提示してほしいかどうかを判断する
+    プロンプトテンプレートを生成します。テンプレートは以下の指示を含むシステムメッセージを設定します:
+
+    1. 文脈解釈の専門家として振る舞う。
+    2. テキストの内容は旅行体験を望んでいる質問者と旅行エージェントであるAIの会話である。
+    3. 質問者がホテルを提示してほしいかどうかを判断する。
+    4. ホテルのリストを表示する必要がある場合、1を返し、それ以外の場合は0を返す。
+
+    Returns:
+        ChatPromptTemplate: ホテルリスト表示のプロンプトテンプレートオブジェクト。
+    """
+    return ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "あなたは文脈解釈の専門家です。"
+                "テキストの内容はある旅行体験を望んでいる質問者と、旅行エージェントであるAIの会話です。"
+                "質問者がホテルを提示してほしいかどうかを判断してください。"
+                "ホテルに関して詳細な情報が含まれている場合は、質問者がホテルを提示してほしいと思っている可能性が高いです。"
+                "ホテルのリストを表示する必要がある場合、1を返し、それ以外の場合は0を返してください。",
+            ),
+            ("{text}"),
+        ]
+    )
+
+
+def generate_display_hotellist(conversation_text: str) -> bool:
+    """
+    会話テキストからホテルリストを表示するかどうかを判断する。
+
+    この関数は、与えられた会話テキストを解析し、質問者がホテルリストを提示してほしいかどうかを
+    判断します。具体的には、以下の手順で動作します:
+
+    1. モデルとプロンプトテンプレートを初期化。
+    2. プロンプトテンプレートとモデルを連携し、構造化された出力を生成する設定を行う。
+    3. 会話テキストを入力として、ホテルリストを表示するかどうかを判断。
+
+    Args:
+        conversation_text (str): 解析する会話テキスト。
+
+    Returns:
+        bool: ホテルリストを表示する必要がある場合はTrue、それ以外の場合はFalse。
+    """
+    model = model_openai
+    display_hotellist_prompt = create_display_hotellist_prompt()
+    runnable = (
+        display_hotellist_prompt | model | BooleanOutputParser(true_val=1, false_val=0)
+    )
+    result = runnable.invoke({"text": conversation_text})
+    return bool(result)
