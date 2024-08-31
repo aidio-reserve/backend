@@ -32,7 +32,7 @@ def initialize_user():
     Returns:
         Response: 初期化されたユーザー情報を含むJSONレスポンス。
     """
-    thread_id = request.json.get("thread_id")
+    thread_id = str(request.json.get("thread_id"))
     store = {}
     store[thread_id] = InMemoryChatMessageHistory()
     config = {"configurable": {"session_id": thread_id}}
@@ -60,7 +60,7 @@ def export_userinfo():
     Returns:
         Response: ユーザー情報を含むJSONレスポンス、またはエラーメッセージ。
     """
-    thread_id = request.json.get("thread_id")
+    thread_id = str(request.json.get("thread_id"))
     # データをロード
     user_info = load_user_info(thread_id)
 
@@ -88,7 +88,7 @@ def chat():
         Response: AI応答を含むJSONレスポンス。
     """
     data = request.json
-    thread_id = data.get("thread_id")
+    thread_id = str(data.get("thread_id"))
     user_message = data.get("message")
 
     # データをロード
