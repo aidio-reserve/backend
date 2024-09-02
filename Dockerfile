@@ -1,9 +1,14 @@
 FROM python:3.12.1
 
-WORKDIR /usr/src/app
-ENV FLASK_APP=app
+WORKDIR /
 
-COPY /app/requirements.txt ./
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+COPY requirements.txt ./
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+COPY . .
+CMD ["flask", "run"]

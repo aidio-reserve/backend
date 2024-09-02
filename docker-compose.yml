@@ -1,9 +1,9 @@
 services:
   app:
+    restart: always
     build: .
+    container_name: "aidio"
+    working_dir: "/"
+    tty: true
     ports:
-      - "5001:5000"
-    container_name: ai_trip
-    volumes:
-      - ./app:/usr/src/app
-    command: flask run --host=0.0.0.0
+      - "8000:5000"

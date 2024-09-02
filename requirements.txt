@@ -1,7 +1,6 @@
-openai==0.28.0
-langchain==0.0.292
-geopy==2.4.1
 Flask==3.0.2
-Flask-Cors==4.0.1
+langchain==0.2.14
+langchain-openai==0.1.22
+googlemaps==4.10.0
 requests==2.31.0
 python-dotenv==1.0.0
