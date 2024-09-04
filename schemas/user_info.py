@@ -30,40 +30,40 @@ class HotelConditions(BaseModel):
         description=f"質問者が旅行で宿泊する予定のチェックアウト日を示す文字列 (YYYY-MM-DD形式)。ただし、今日の日付は「{datetime.today().date()}」です。",
     )
     adultnNum: Optional[int] = Field(
-        default=2, description="質問者の旅行で宿泊する大人の人数を示す整数。"
+        default=None, description="質問者の旅行で宿泊する大人の人数を示す整数。"
     )
     upClassNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で宿泊する小学生高学年（おおむね10歳～12歳）の人数を示す整数。",
     )
     lowClassNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で宿泊する小学生低学年（おおむね6歳～9歳）の人数を示す整数。",
     )
     infantWithMBNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で食事と布団付きで宿泊する幼児の人数を示す整数。",
     )
     infantWithMNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で食事のみ付きで宿泊する幼児の人数を示す整数。",
     )
     infantWithBNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で布団のみ付きで宿泊する幼児の人数を示す整数。",
     )
     infantWithNoneNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で食事および布団が不要な幼児の人数を示す整数。",
     )
     roomNum: Optional[int] = Field(
-        default=1, description="質問者の旅行で宿泊する部屋の数を示す整数。"
+        default=None, description="質問者の旅行で宿泊する部屋の数を示す整数。"
     )
     maxCharge: Optional[int] = Field(
         default=None, description="質問者の旅行の宿泊料金の上限金額、予算を示す整数。"
     )
     minCharge: Optional[int] = Field(
-        default=0, description="質問者の旅行の宿泊料金の下限金額を示す整数。"
+        default=None, description="質問者の旅行の宿泊料金の下限金額を示す整数。"
     )
 
 
