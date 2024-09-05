@@ -150,7 +150,7 @@ class UserInfo(BaseModel):
         )
         check_in_date = self.hotel_conditions.checkinDate or None
         check_out_date = self.hotel_conditions.checkoutDate or None
-        number_of_people = self.hotel_conditions.adultnNum or None
+        number_of_people = self.hotel_conditions.adultNum or None
         min_charge = self.hotel_conditions.minCharge or None
         max_charge = self.hotel_conditions.maxCharge or None
         return {
@@ -176,7 +176,7 @@ class UserInfo(BaseModel):
                     include={
                         "checkinDate",
                         "checkoutDate",
-                        "adultnNum",
+                        "adultNum",
                         "upClassNum",
                         "lowClassNum",
                         "infantWithMBNum",
