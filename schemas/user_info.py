@@ -29,7 +29,7 @@ class HotelConditions(BaseModel):
         default=None,
         description=f"質問者が旅行で宿泊する予定のチェックアウト日を示す文字列 (YYYY-MM-DD形式)。ただし、今日の日付は「{datetime.today().date()}」です。",
     )
-    adultnNum: Optional[int] = Field(
+    adultNum: Optional[int] = Field(
         default=None, description="質問者の旅行で宿泊する大人の人数を示す整数。"
     )
     upClassNum: Optional[int] = Field(
