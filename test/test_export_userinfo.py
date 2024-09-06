@@ -6,7 +6,7 @@ import json
 url = "http://localhost:8000/export_userinfo"
 
 # 送信するデータ
-data = {"thread_id": "20021114"}
+data = {"thread_id": "あああ"}
 
 # POSTリクエストを送信
 response = requests.post(url, json=data)
