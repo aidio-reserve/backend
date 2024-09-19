@@ -58,10 +58,7 @@ def create_chat_prompt_template() -> ChatPromptTemplate:
     )
 
 
-def generate_ai_response(
-    thread_id: str,
-    message: str,
-) -> str:
+def generate_ai_response(thread_id: str, message: str, store, config, user_info) -> str:
     """
     指定されたスレッドIDとメッセージを使用してAIのレスポンスを生成する。
 
@@ -83,9 +80,10 @@ def generate_ai_response(
     """
     # セッション履歴を取得
     model = model_openai
-    store = load_store(thread_id)
-    config = load_config(thread_id)
-    user_info = load_user_info(thread_id)
+
+    # store = load_store(thread_id)
+    # config = load_config(thread_id)
+    # user_info = load_user_info(thread_id)
 
     def get_session_history(session_id: str) -> BaseChatMessageHistory:
         if session_id not in store:

@@ -9,7 +9,7 @@ from models import (
 )
 
 
-def process_message(thread_id: str, message: str) -> str:
+def process_message(thread_id: str, message: str, store, config, user_info) -> str:
     """
     指定されたスレッドIDとメッセージを使用してメッセージを処理し、AIのレスポンスを返す。
 
@@ -32,8 +32,8 @@ def process_message(thread_id: str, message: str) -> str:
     """
 
     # データをロード
-    store = load_store(thread_id)
-    user_info = load_user_info(thread_id)
+    # store = load_store(thread_id)
+    # user_info = load_user_info(thread_id)
 
     # 会話履歴を構築
     formatted_message = f"Human: {message}"
@@ -43,7 +43,7 @@ def process_message(thread_id: str, message: str) -> str:
     user_info.update_userinfo(updated_hotel_info)
 
     # AIのレスポンスを生成
-    ai_response = generate_ai_response(thread_id, message)
+    ai_response = generate_ai_response(thread_id, message, store, config, user_info)
 
     # 再度ストアをロードして更新された会話履歴を取得
     store = load_store(thread_id)
