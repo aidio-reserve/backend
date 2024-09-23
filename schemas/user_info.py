@@ -5,6 +5,57 @@ import googlemaps
 import settings
 import os
 
+# 都道府県とその県庁所在地のマッピング
+prefecture_capitals = {
+    "北海道": "札幌市",
+    "青森県": "青森市",
+    "岩手県": "盛岡市",
+    "宮城県": "仙台市",
+    "秋田県": "秋田市",
+    "山形県": "山形市",
+    "福島県": "福島市",
+    "茨城県": "水戸市",
+    "栃木県": "宇都宮市",
+    "群馬県": "前橋市",
+    "埼玉県": "さいたま市",
+    "千葉県": "千葉市",
+    "東京都": "新宿区",
+    "神奈川県": "横浜市",
+    "新潟県": "新潟市",
+    "富山県": "富山市",
+    "石川県": "金沢市",
+    "福井県": "福井市",
+    "山梨県": "甲府市",
+    "長野県": "長野市",
+    "岐阜県": "岐阜市",
+    "静岡県": "静岡市",
+    "愛知県": "名古屋市",
+    "三重県": "津市",
+    "滋賀県": "大津市",
+    "京都府": "京都市",
+    "大阪府": "大阪市",
+    "兵庫県": "神戸市",
+    "奈良県": "奈良市",
+    "和歌山県": "和歌山市",
+    "鳥取県": "鳥取市",
+    "島根県": "松江市",
+    "岡山県": "岡山市",
+    "広島県": "広島市",
+    "山口県": "山口市",
+    "徳島県": "徳島市",
+    "香川県": "高松市",
+    "愛媛県": "松山市",
+    "高知県": "高知市",
+    "福岡県": "福岡市",
+    "佐賀県": "佐賀市",
+    "長崎県": "長崎市",
+    "熊本県": "熊本市",
+    "大分県": "大分市",
+    "宮崎県": "宮崎市",
+    "鹿児島県": "鹿児島市",
+    "沖縄県": "那覇市",
+}
+
 
 class HotelConditions(BaseModel):
     """ホテルの条件リストを示すクラス"""
@@ -23,11 +74,11 @@ class HotelConditions(BaseModel):
     )
     checkinDate: Optional[str] = Field(
         default=None,
-        description=f"質問者が旅行で宿泊する予定のチェックイン日を示す文字列 (YYYY-MM-DD形式)。ただし、今日の日付は「{datetime.today().date()}」です。",
+        description=f"質問者が旅行で宿泊する予定のチェックイン日を示す文字列 (YYYY-MM-DD形式)。今日以降の日付を指定してください。今日の日付は「{datetime.today().date()}」です。",
     )
     checkoutDate: Optional[str] = Field(
         default=None,
-        description=f"質問者が旅行で宿泊する予定のチェックアウト日を示す文字列 (YYYY-MM-DD形式)。ただし、今日の日付は「{datetime.today().date()}」です。",
+        description=f"質問者が旅行で宿泊する予定のチェックアウト日を示す文字列 (YYYY-MM-DD形式)。チェックイン日より後かつ今日以降の日付を指定してください。今日の日付は「{datetime.today().date()}」です。",
     )
     adultNum: Optional[int] = Field(
         default=1, description="質問者の旅行で宿泊する大人の人数を示す整数。"
@@ -89,13 +140,18 @@ def fetch_coordinates(hotels: HotelConditions) -> dict:
     gm = googlemaps.Client(key=os.environ["GOOGLE_MAP_API_KEY"])
 
     # ホテルの情報を使用してジオコーディングを実行
-    res = gm.geocode(f"{hotels.pref} {hotels.city} {hotels.landmark}")
+    address_components = [hotels.pref, hotels.city, hotels.landmark]
+    address = " ".join(filter(None, address_components))
+    res = gm.geocode(address)
 
     # 座標を抽出して返す
-    return {
-        "latitude": res[0]["geometry"]["location"]["lat"],
-        "longitude": res[0]["geometry"]["location"]["lng"],
-    }
+    if res:
+        return {
+            "latitude": res[0]["geometry"]["location"]["lat"],
+            "longitude": res[0]["geometry"]["location"]["lng"],
+        }
+    else:
+        return {"latitude": None, "longitude": None}
 
 
 class UserInfo(BaseModel):
@@ -121,11 +177,68 @@ class UserInfo(BaseModel):
         Args:
             hotel_conditions (HotelConditions): 更新するホテルの条件。
         """
+        # ホテル条件を更新
+        self.hotel_conditions = hotel_conditions
+        # エラーハンドリング関数を実行
+        self.handle_error_conditions()
         # 座標を取得
         coordinates = fetch_coordinates(self.hotel_conditions)
         self.latitude = coordinates.get("latitude")
         self.longitude = coordinates.get("longitude")
-        self.hotel_conditions = hotel_conditions
+
+    def handle_error_conditions(self):
+        """
+        エラーハンドリングの関数をまとめた関数。
+        """
+        self.set_city_to_prefecture_capital()
+        self.validate_checkin_date()
+        self.validate_checkout_date()
+
+    def set_city_to_prefecture_capital(self):
+        """
+        hotel_conditions.prefに都道府県名があり、hotel_conditions.cityがNoneの場合、
+        hotel_conditions.cityにその都道府県の県庁所在地を代入する。
+        """
+        if self.hotel_conditions.pref and not self.hotel_conditions.city:
+            capital = prefecture_capitals.get(self.hotel_conditions.pref)
+            if capital:
+                self.hotel_conditions.city = capital
+
+    def validate_checkin_date(self):
+        """
+        hotel_conditions.checkinDateが今日以前の日付の場合、Noneを代入する。
+        """
+        if self.hotel_conditions.checkinDate:
+            try:
+                checkin_date = datetime.strptime(
+                    self.hotel_conditions.checkinDate, "%Y-%m-%d"
+                ).date()
+                today = datetime.today().date()
+                if checkin_date < today:
+                    self.hotel_conditions.checkinDate = None
+            except ValueError:
+                self.hotel_conditions.checkinDate = None
+
+    def validate_checkout_date(self):
+        """
+        hotel_conditions.checkoutDateがcheckinDate以前の日付または今日以前の日付の場合、Noneを代入する。
+        """
+        if self.hotel_conditions.checkoutDate:
+            try:
+                checkout_date = datetime.strptime(
+                    self.hotel_conditions.checkoutDate, "%Y-%m-%d"
+                ).date()
+                today = datetime.today().date()
+                if self.hotel_conditions.checkinDate:
+                    checkin_date = datetime.strptime(
+                        self.hotel_conditions.checkinDate, "%Y-%m-%d"
+                    ).date()
+                else:
+                    checkin_date = today
+                if checkout_date <= checkin_date or checkout_date < today:
+                    self.hotel_conditions.checkoutDate = None
+            except ValueError:
+                self.hotel_conditions.checkoutDate = None
 
     def get_hotel_options(self) -> dict:
         """
