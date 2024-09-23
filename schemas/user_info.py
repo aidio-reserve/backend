@@ -80,31 +80,31 @@ class HotelConditions(BaseModel):
         default=None,
         description=f"質問者が旅行で宿泊する予定のチェックアウト日を示す文字列 (YYYY-MM-DD形式)。チェックイン日より後かつ今日以降の日付を指定してください。今日の日付は「{datetime.today().date()}」です。",
     )
-    adultnNum: Optional[int] = Field(
-        default=2, description="質問者の旅行で宿泊する大人の人数を示す整数。"
+    adultNum: Optional[int] = Field(
+        default=1, description="質問者の旅行で宿泊する大人の人数を示す整数。"
     )
     upClassNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で宿泊する小学生高学年（おおむね10歳～12歳）の人数を示す整数。",
     )
     lowClassNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で宿泊する小学生低学年（おおむね6歳～9歳）の人数を示す整数。",
     )
     infantWithMBNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で食事と布団付きで宿泊する幼児の人数を示す整数。",
     )
     infantWithMNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で食事のみ付きで宿泊する幼児の人数を示す整数。",
     )
     infantWithBNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で布団のみ付きで宿泊する幼児の人数を示す整数。",
     )
     infantWithNoneNum: Optional[int] = Field(
-        default=0,
+        default=None,
         description="質問者の旅行で食事および布団が不要な幼児の人数を示す整数。",
     )
     roomNum: Optional[int] = Field(
@@ -114,7 +114,7 @@ class HotelConditions(BaseModel):
         default=None, description="質問者の旅行の宿泊料金の上限金額、予算を示す整数。"
     )
     minCharge: Optional[int] = Field(
-        default=0, description="質問者の旅行の宿泊料金の下限金額を示す整数。"
+        default=None, description="質問者の旅行の宿泊料金の下限金額を示す整数。"
     )
 
 
@@ -263,7 +263,7 @@ class UserInfo(BaseModel):
         )
         check_in_date = self.hotel_conditions.checkinDate or None
         check_out_date = self.hotel_conditions.checkoutDate or None
-        number_of_people = self.hotel_conditions.adultnNum or None
+        number_of_people = self.hotel_conditions.adultNum or None
         min_charge = self.hotel_conditions.minCharge or None
         max_charge = self.hotel_conditions.maxCharge or None
         return {
@@ -289,7 +289,7 @@ class UserInfo(BaseModel):
                     include={
                         "checkinDate",
                         "checkoutDate",
-                        "adultnNum",
+                        "adultNum",
                         "upClassNum",
                         "lowClassNum",
                         "infantWithMBNum",
