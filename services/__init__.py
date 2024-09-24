@@ -1,2 +1,3 @@
 from .conversation_service import process_message
 from .displayhotel_service import process_display_hotel
+from .rakuten_hotelapi import get_hotelinfo_display

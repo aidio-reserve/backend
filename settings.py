@@ -8,6 +8,8 @@ load_dotenv(dotenv_path)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 GOOGLE_MAP_API_KEY = os.environ.get("GOOGLE_MAP_API_KEY")
+RAKUTEN_TRAVEL_API_KEY = os.environ.get("RAKUTEN_TRAVEL_API_KEY")
+RAKUTEN_TRAVEL_API_URL = os.environ.get("RAKUTEN_TRAVEL_API_URL")
 LANGCHAIN_API_KEY = os.environ.get("LANGCHAIN_API_KEY")
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 

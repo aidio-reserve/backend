@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from schemas import UserInfo, HotelConditions
-from services import process_message, process_display_hotel
+from services import process_message, process_display_hotel, get_hotelinfo_display
 from models import (
     save_store,
     save_config,
@@ -108,6 +108,10 @@ def chat():
         "display_hotel": display_hotel_bool,
         "hotel_option": user_info.get_hotel_options(),
     }
+
+    if display_hotel_bool == 1:
+        hotel_info_display = get_hotelinfo_display(thread_id)
+        res["hotel_info_display"] = hotel_info_display
 
     return jsonify(res)
 
