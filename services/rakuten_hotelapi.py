@@ -70,8 +70,8 @@ def extract_hotelinfo(hoteldata_json: dict):
         # お客様の声
         user_review = hotel_basic_info.get("userReview")
         # チェックイン時刻・チェックアウト時刻（データがない場合は"情報なし"とする）
-        checkin_time = hotel_basic_info.get("checkinTime", "情報なし")
-        checkout_time = hotel_basic_info.get("checkoutTime", "情報なし")
+        checkin_time = hotel_basic_info.get("checkinTime", "No information")
+        checkout_time = hotel_basic_info.get("checkoutTime", "No information")
 
         # 夕食有無・朝食有無を判定
         has_dinner = False
@@ -99,8 +99,8 @@ def extract_hotelinfo(hoteldata_json: dict):
             "userreview": user_review,
             "checkintime": checkin_time,
             "checkouttime": checkout_time,
-            "dinnerincluded": "Yes" if has_dinner else "No",
-            "breakfastincluded": "Yes" if has_breakfast else "No",
+            "dinnerincluded": has_dinner,
+            "breakfastincluded": has_breakfast,
         }
         hotels_info.append(hotel_info)
     return hotels_info
