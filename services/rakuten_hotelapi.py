@@ -69,9 +69,9 @@ def extract_hotelinfo(hoteldata_json: dict):
         room_image = hotel_basic_info.get("roomImageUrl")
         # お客様の声
         user_review = hotel_basic_info.get("userReview")
-        # チェックイン時刻・チェックアウト時刻（データがない場合は"情報なし"とする）
-        checkin_time = hotel_basic_info.get("checkinTime", "No information")
-        checkout_time = hotel_basic_info.get("checkoutTime", "No information")
+        # チェックイン時刻・チェックアウト時刻
+        checkin_time = hotel_basic_info.get("checkinTime")
+        checkout_time = hotel_basic_info.get("checkoutTime")
 
         # 夕食有無・朝食有無を判定
         has_dinner = False
